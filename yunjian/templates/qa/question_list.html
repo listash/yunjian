@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static remainder %}
+
+{% block title %}问答 - {{ block.super }}{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/qa.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div style="position: absolute;top: 0;background-image: url('{% static 'img/colorbox.png' %}');width: 100%;height: 300px;">
+        <div class="text-center" style="color: whitesmoke;margin-top: 130px;">
+            <span style="font-size: 50px;"><strong>问答</strong></span>
+            <p id="jinrishici-sentence">正在加载今日诗词....</p>
+        </div>
+    </div>
+    {% include 'messages.html' %}
+
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12 col-centered">
+
+
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'news:list' %}">首页</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'qa:unanswer_q' %}">问答</a></li>
+            </ol>
+        </nav>
+
+        <div class="card my-4">
+            <h5 class="card-header">按话题分类
+              <a href="{% url 'qa:ask_question' %}" class="btn-sm btn-primary pull-right">
+                  <i class="fa fa-pencil" aria-hidden="true"></i>提问
+              </a>
+            </h5>
+        </div>
+
+        <div class="card-body">
+            {% for tag, count in popular_tags %}
+                <a href="{% url 'articles:tag_list' tag %}"><span class="badge"
+                    {% if forloop.counter|get_remainder == 1 %}
+                        style="background-color: #B433FF;color: white"
+                    {% elif forloop.counter|get_remainder == 2 %}
+                        style="background-color: #CC9393;color: white"
+                    {% elif forloop.counter|get_remainder == 3 %}
+                        style="background-color: #15A287;color: white"
+                    {% elif forloop.counter|get_remainder == 4 %}
+                        style="background-color: #D9534F;color: white"
+                    {% elif forloop.counter|get_remainder == 5 %}
+                        style="background-color: #567E95;color: white"
+                    {% elif forloop.counter|get_remainder == 6 %}
+                        style="background-color: #139ff7;color: white"
+                    {% elif forloop.counter|get_remainder == 7 %}
+                        style="background-color: #FF6600;color: white"
+                    {% elif forloop.counter|get_remainder == 8 %}
+                        style="background-color: #00a8c6;color: white"
+                    {% elif forloop.counter|get_remainder == 9 %}
+                        style="background-color: #D0D2B5;color: white"
+                    {% elif forloop.counter|get_remainder == 0 %}
+                        style="background-color: #b3d4fc;color: white"
+
+                    {% endif %}
+                >{{ tag }}&nbsp;<span class="badge" style="background-color: whitesmoke;color: #6c757d;line-height: 0.7;">{{ count }}</span></span></a>
+            {% endfor %}
+        </div>
+
+        <div>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'unanswered' %} active{% endif %}" href="{% url 'qa:unanswer_q' %}">
+                      等待回答
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'answered' %} active{% endif %}" href="{% url 'qa:answer_q' %}">
+                      已经解决
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link{% if active == 'all' %} active{% endif %}" href="{% url 'qa:all_q' %}">
+                      全部问答
+                  </a>
+                </li>
+            </ul>
+            {% for question in questions %}
+            {% include 'qa/question_sample.html' with question=question %}
+            {% empty %}
+                <h4 class="no-data">没有要显示的问题</h4>
+            {% endfor %}
+        </div>
+
+        {% include 'pagination.html' %}
+    </div>
+   </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/qa.js' %}"></script>
+{% endblock %}

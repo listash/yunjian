@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+        }
+        .title{
+            background-color: #2b99ff;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            color: #3d2fa2;
+
+        }
+        .user{
+            width: 180px;
+            height: 50px;
+            margin-left: 20px;
+            background-color: #7a7b50;
+            cursor: auto;
+
+        }
+        .user .msg{
+            display: none;
+            width: 200px;
+            height: 40px;
+            float: left;
+            border: 1px solid red ;
+            background-color: #787b53;
+            z-index: 2;
+            position: relative;
+
+        }
+        .user .msg a:hover{
+            cursor: pointer;
+
+        }
+        .clearfix:after{
+        content:"0";
+        display: block;
+        clear: both;
+        visibility: hidden;
+        height: 0;
+        }
+        .user:hover .msg{
+            display: block;
+        }
+        {#.text{#}
+        {#    font-size: 30px;#}
+        {#    color: black;#}
+        {#    background-color: #99aecb;#}
+        {#    height: 800px;#}
+        {#    position: absolute;#}
+        {#    width: 1500px;#}
+        {#    z-index: 1;#}
+        {#}#}
+    </style>
+</head>
+<body>
+    <div class="title">
+        <div class="user clearfix">用户
+            <div class="msg"><a>博客</a></div>
+            <div class="msg"><a>闪存</a></div>
+            <div class="msg"><a>积分</a></div>
+            <div class="msg"><a>评论</a></div>
+            <div class="msg"><a>关注</a></div>
+        </div>
+        <div class="text">文档内容</div>
+    </div>
+</body>
+</html>

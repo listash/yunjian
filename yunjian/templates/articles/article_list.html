@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% load static thumbnail remainder %}
+
+{% block title %}文章 - {{ block.super }}{% endblock %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/article.css' %}">
+    <style>
+        .card-body img {
+            transition: all 0.5s ease-in-out 0s;
+        }
+
+        .card-body:hover img {
+            transform: scale(1.05);
+        }
+    </style>
+
+{% endblock %}
+{% block content %}
+    <!-- 顶部背景图 -->
+    <div style="position: absolute;top: 0;background-image: url('{% static 'img/smilegirl.png' %}');width: 100%;height: 300px;">
+        <div class="text-center" style="color: whitesmoke;margin-top: 130px;">
+            <span style="font-size: 50px;"><strong>文章</strong></span>
+              <p id="jinrishici-sentence">正在加载今日诗词....</p>
+        </div>
+    </div>
+
+    {% include 'messages.html' %}
+
+    <div class="container">
+
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'news:list' %}">首页</a></li>
+                <li class="breadcrumb-item active"><a href="{% url 'articles:list' %}">文章</a></li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
+                {% for article in articles %}
+                    <!-- Blog Post -->
+
+                    <div class="card mb-4">
+
+                        <div class="card-body" style="padding-bottom: 0;padding-top: 10px;background-color: #F7F7F7;border-bottom: 1px solid rgba(0,0,0,.125);">
+
+                            {% if article.column %}
+                                <h3><a href="{% url 'articles:column_list' article.column.title %}" class="btn btn-danger" style="margin-bottom: 6px">{{ article.column }}</a>
+                                    <a href="{% url 'articles:article' article.slug %}">
+                                        <strong class="card-title">{{ article.title|title }}</strong>
+                                    </a>
+                                </h3>
+                            {% else %}
+                                <a href="{% url 'articles:article' article.slug %}">
+                                    <h3 class="card-title"><strong>{{ article.title|title }}</strong></h3>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+
+                                {% thumbnail article.image "190x110" as im %}
+                                    <img class="picture" src="{{ im.url }}" width="190px" height="110px" alt="文章图片" style="float: left;border-radius: 5px">
+                                    {% empty %}
+                                    <img class="picture" src="{% static 'img/box.png' %}" width="190px" height="110px" style="float: left;border-radius: 5px" alt="没有头像"/>
+
+                                {% endthumbnail %}
+
+
+                            <div class="" style="margin-left: 210px;font-size: 15px;">
+                                {% if article.summary %}
+                                <p class="card-summary" style="margin-bottom: 0">摘要：</p>
+                                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ article.summary|truncatechars:117 }}...</p>
+                                  {% else %}
+                                  <p class="card-summary" style="margin-bottom: 0">摘要：</p>
+                                  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ article.title }}...</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                        <div class="pull-right">
+                            <a href="{% url 'users:detail' article.user.username %}">{{ article.user.get_profile_name }}</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-calendar" style="color: #a232d0"></i>&nbsp;&nbsp;{{ article.created_at|date:"Y-m-d" }}&nbsp;&nbsp;
+                            <i class="fa fa-eye" style="color: #8f65f5"></i>&nbsp;{{ article.view_nums }}&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-comments" style="color: limegreen"></i>&nbsp;
+                            {{ article.article_comment.all.count }}&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            {% for tag in article.tags.names %}
+                                <a href="#"><span class="badge badge-info">{{ tag }}</span></a>
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+
+                    {% empty %}
+                    <h4 class="no-data"><a href="{% url 'articles:write_new' %}">快来成为第一个写文章的吧！</a></h4>
+                {% endfor %}
+
+                {% include 'pagination.html' %}
+
+            </div>
+
+            <!-- Sidebar Widgets Column -->
+            <div class="col-md-4">
+                <div id="sidebar" class="sidebar">
+                    <div class="sidebar__inner">
+                <!-- Write Article Widget -->
+                        {% if request.user.is_authenticated %}
+                            <div class="card my-4">
+                                <div class="card-body text-center">
+                                    <a class="btn btn-success" href="{% url 'articles:write_new' %}" title="写文章">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i> 写文章</a>
+                                    <a class="btn btn-primary" href="{% url 'articles:drafts' %}" title="草稿箱">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i> 草稿箱</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <!-- 彩色标签云,看着有点眼花缭乱 -->
+{#                        <div class="card my-4">#}
+{#                            <h5 class="card-header text-center">标签云</h5>#}
+{#                            <div class="card-body">#}
+{#                                {% for tag, count in popular_tags %}#}
+{##}
+{#                                    <a href="{% url 'articles:tag_list' tag %}"><span class="badge"#}
+{#                                        {% if forloop.counter|get_remainder == 1 %}#}
+{#                                            style="background-color: #15A287;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 2 %}#}
+{#                                            style="background-color: #D9534F;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 3 %}#}
+{#                                            style="background-color: #B433FF;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 4 %}#}
+{#                                            style="background-color: #CC9393;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 5 %}#}
+{#                                            style="background-color: #567E95;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 6 %}#}
+{#                                            style="background-color: #139ff7;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 7 %}#}
+{#                                            style="background-color: #FF6600;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 8 %}#}
+{#                                            style="background-color: #00a8c6;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 9 %}#}
+{#                                            style="background-color: #d2a939;color: white"#}
+{#                                        {% elif forloop.counter|get_remainder == 0 %}#}
+{#                                            style="background-color: #b3d4fc;color: white"#}
+{##}
+{#                                        {% endif %}#}
+{#                                    >#{{ tag }}&nbsp;<span class="badge" style="background-color: whitesmoke;color: #6c757d;line-height: 0.7;">{{ count }}</span></span></a>#}
+{#                                {% endfor %}#}
+{#                            </div>#}
+{#                        </div>#}
+
+                        <!-- 标签云 -->
+                        <div class="card my-4">
+                            <h5 class="card-header text-center">标签云</h5>
+                            <div class="card-body">
+                                {% for tag, count in popular_tags %}
+
+                                    <a href="{% url 'articles:tag_list' tag %}"><span class="badge"
+                                            style="background-color: #567E95;color: white;font-size: 14px;"
+                                    >&nbsp;#{{ tag }}&nbsp;</span></a>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- 文章分类 考虑还是把此功能放到导航栏，暂时先不写 -->
+{#                        <div class="card my-4">#}
+{#                            <h5 class="card-header text-center">文章分类</h5>#}
+{#                            <div class="card-body">#}
+{##}
+{#                            </div>#}
+{#                        </div>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+
+{% endblock content %}
+
+{% block js %}
+    <script src="{% static 'js/sticky-sidebar.js' %}"></script>
+    <script type="text/javascript">
+        let sidebar = new StickySidebar('#sidebar', {
+            {#containerSelector: '',#}
+            innerWrapperSelector: '.sidebar__inner',
+            topSpacing: 50,
+            bottomSpacing: 20
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static thumbnail humanize %}
+
+{% block title %}
+通知 - {{ block.super }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h4>
+    {{ request.user.get_profile_name }}的未读通知列表
+      <a class="btn btn-dark pull-right" href="{% url 'notifications:mark_all_as_read' %}">全部标记为已读</a>
+    </h4>
+    <ul class="notifications">
+        {% for notification in notification_list %}
+            <li class="notification">
+                <div class="media">
+                    <div class="media-object">
+                        {% thumbnail notification.actor.picture "x75" as im %}
+                          <img src="{{ im.url }}" alt="用户头像" style="border-radius: 50%;" id="pic">
+                        {% empty %}
+                          <img src="{% static 'img/user.png' %}" alt="没有头像" height="75px">
+                        {% endthumbnail %}
+                    </div>
+                    <div class="media-body">
+                        <a class="btn btn-success btn-sm pull-right" href="{% url 'notifications:mark_as_read' notification.slug %}" title="标为已读">
+                            <i class="fa fa-check-circle"></i>
+                        </a>
+                        <strong class="notification-title">
+                            <a href="{% url 'users:detail' notification.actor.username %}">
+                              {{ notification.actor.get_profile_name }}
+                            </a>
+                        </strong>
+                        <p class="notification-desc">
+                            {{ notification.get_verb_display }}
+                            {% if notification.action_object %}
+                                {{ notification.action_object }}
+                            {% endif %}
+                        </p>
+                        <div class="notification-meta">
+                            <small>{{ notification.created_at|naturaltime }}</small>
+                        </div>
+                      </div>
+                </div>
+            </li>
+        {% empty %}
+            空空如也
+        {% endfor %}
+    </ul>
+{% endblock %}

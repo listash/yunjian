@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+{% load static crispy_forms_tags thumbnail mptt_tags humanize remainder %}
+
+{% block title %}{{ article.title|title }} - {{ block.super }}{% endblock %}
+{% block css %}
+  <link rel="stylesheet" href="{% static 'mdeditor/css/editormd.preview.css' %}">
+  <link rel="stylesheet" href="{% static 'css/article.css' %}">
+  <link rel="stylesheet" href="{% static 'ckeditor/ckeditor/plugins/prism/lib/prism/prism.css' %}">
+  <style>
+      .nav-bkg-dark {
+          background-color: #0a001f;
+          opacity: 1;
+      }
+      .title-dark {
+          font-size: 50px;
+          color: #0a001f;
+          text-shadow: 2px 2px 10px whitesmoke;
+      }
+      .title-white {
+          font-size: 50px;
+          color: whitesmoke;
+          text-shadow: 2px 2px 10px #0a001f;
+      }
+      .title-msg-grey {
+          margin:30px 0 8px 0;
+          font-size: 15px;
+          color: grey
+      }
+      .title-msg-white {
+          margin:30px 0 8px 0;
+          font-size: 15px;
+          color: whitesmoke;
+      }
+      .link-grey {
+          color: grey;
+          text-decoration: underline;
+      }
+      .link-white {
+          color: whitesmoke;
+          text-decoration: underline;
+      }
+  </style>
+
+
+{% endblock %}
+{% block content %}
+    <div class="top-bkg" id="{{ article.top_image }}" style="position: absolute;top: 0;background-image: url('{{ MEDIA_URL }}{{ article.top_image }}');width: 100%;height: 300px;">
+        <div class="text-center" style="color: whitesmoke;margin-top: 140px;">
+            <span class="title-dark" style=""><strong>{{ article.title|title }}</strong></span>
+            <p class="text-center title-msg-grey">
+                <a href="{% url 'users:detail' article.user.username %}" class="link-grey">{{ article.user.get_profile_name }}</a>&nbsp;·&nbsp;
+                {{ article.created_at|date:'Y-m-d' }}&nbsp;·&nbsp;
+                {{ article.view_nums }}阅读&nbsp;·&nbsp;
+                {{ comments.count }}
+                <a href="#comments" class="link-grey">评论</a>
+                {% if request.user.username == article.user.username %}
+                    &nbsp;·&nbsp;<a  href="{% url 'articles:edit_article' article.pk %}" title="编辑文章" class="link-grey">编辑</a>&nbsp;·&nbsp;
+                    <a  href="{% url 'articles:delete_article' article.pk %}" title="删除文章" class="link-grey">删除</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    {% include 'messages.html' %}
+    <!-- Page Content -->
+    <div class="container">
+
+        <div class="row">
+            <!-- Post Content Column -->
+            <div class="col-md-9 col-centered">
+
+                <!-- 文章内容 -->
+                <div id="article_content" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;">
+                    <textarea style="display:none">{{ article.content | safe }}</textarea>
+                </div>
+
+
+                <hr>
+                <ul class="post-copyright">
+                    <li class="copyright-item author">作者：{{ article.user.get_profile_name }}</li>
+                    <li class="copyright-item link">链接：{{ request.get_raw_uri }}</li>
+                    <li class="copyright-item license">协议：本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</li>
+                </ul>
+                <hr>
+                <!-- 发表评论 -->
+                <div >
+                    <h5 class="card-header" style="margin-top: 30px"><strong>泥上偶然留指爪，鸿飞不复计东西</strong></h5>
+                    <form action="{% url 'articles:post_comment' article.id %}" method="POST" onsubmit="return check()" class="clearfix" style="margin-bottom: 10px">
+                        {% csrf_token %}
+                        <div id="post_comment" class="form-group">
+                            {{ comment_form.media }}
+                            {{ comment_form.comment }}
+                        </div>
+                        <input type="hidden" name="next" value="{% url 'articles:article' article.slug %}"/>
+
+                       <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-send">&nbsp;&nbsp;寄语</i></button>
+                    </form>
+                </div>
+
+
+                <span id="comments">
+                    <span style="font-size: 25px;">Comments | </span>
+                    <span>{{ comments.count }}条评论</span>
+                </span>
+
+                  <!-- 评论列表 -->
+                  <div class="row" style="margin-bottom: 40px;">
+                      <!-- 遍历树形结构 -->
+                      {% recursetree comments %}
+                          {% with comment=node %}
+                              <div class="{% if comment.reply_to %}offset-1 col-11{% else %}col-12{% endif %}">
+                                  {% if not comment.reply_to %}
+                                  <hr style="margin-top: 0; margin-bottom: 8px;">
+                                  {% endif %}
+                                      <div class="media mb4">
+                                          {% if not comment.reply_to %}
+                                              {% thumbnail comment.user.picture "x60" as im %}
+                                                  <img class="d-flex mr-3 rounded-circle" src="{{ im.url }}" alt="用户头像" id="pic" style="margin-top: 10px"/>
+                                              {% empty %}
+                                                  <img class="d-flex mr-3 rounded-circle" style="margin-top: 8px" src="{% static 'img/user.png' %}" height="60px" alt="没有头像"/>
+                                          {% endthumbnail %}
+                                          {% else %}
+                                              {% thumbnail comment.user.picture "x40" as im %}
+                                                  <img class="d-flex mr-3 rounded-circle" src="{{ im.url }}" alt="用户头像" id="pic"/>
+                                              {% empty %}
+                                                  <img class="d-flex mr-3 rounded-circle" src="{% static 'img/user.png' %}" height="35px" alt="没有头像"/>
+                                              {% endthumbnail %}
+                                          {% endif %}
+                                          <div class="media-body">
+                                              <p style="margin-bottom: 5px">
+                                                  <strong>
+                                                    <a href="{% url 'users:detail' comment.user.username %}" style="color: #8c1df1">
+                                                        {{ comment.user }}
+                                                    </a>
+                                                  </strong>
+
+                                                  {% if comment.reply_to %}
+                                                          回复: @
+                                                          <strong style="color: pink">
+                                                            <a href="{% url 'users:detail' comment.reply_to.username %}">
+                                                                {{ comment.reply_to }}
+                                                            </a>
+                                                          </strong>
+                                                  {% endif %}
+                                              </p>
+                                              <div>{{ comment.comment|safe }}</div>
+                                              <div style="color: #999">
+                                                  <span >{{ comment.created_at|date:"Y-m-d H:i:s" }}</span>
+                                                  <!-- modal 按钮 -->
+                                                  <button type="button" class="btn btn-light btn-sm text-muted" onclick="load_modal({{ article.id }}, {{ comment.id }})" style="margin-bottom: 5px">
+                                                      回复
+                                                  </button>
+                                              </div>
+                                          </div>
+                                      </div>
+
+                                  <!-- Modal -->
+                                  <div class="modal fade" id="comment_{{ comment.id }}" tabindex="-1" role="dialog" aria-labelledby="CommentModalCenter" aria-hidden="true">
+                                      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                          <div class="modal-content" style="height: 400px">
+                                              <div class="modal-header">
+                                                  <h5 class="modal-title" id="esampleModalCenterTitle">
+                                                    回复 {{ comment.user }}</h5>
+                                              </div>
+                                              <div class="modal-body" id="modal_body_{{ comment.id }}"></div>
+                                          </div>
+                                      </div>
+                                  </div>
+
+                                  {% if not comment.is_leaf_node %}
+                                      <div class="children">
+                                          {{ children }}
+                                      </div>
+                                  {% endif %}
+                              </div>
+                          {% endwith %}
+                      {% endrecursetree %}
+                  </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container -->
+{% endblock content %}
+
+{% block js %}
+
+    <script src="{% static 'mdeditor/js/editormd.js' %}" type="text/javascript"></script>
+    <script src="{% static 'mdeditor/js/lib/marked.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'mdeditor/js/lib/prettify.min.js' %}" type="text/javascript"></script>
+    <script>
+        editormd.markdownToHTML("article_content", { //article_content是html文档的ID
+            emoji                : true,  // 表情
+            taskList             : true,  //Github风格的task lists
+            gfm                  : true,
+            toc                  : true,  // 目录
+            tocm                 : false,
+            tocStartLevel        : 1,
+            tocTitle             : "目录",
+            tocDropdown          : true, // 鼠标悬停显示目录
+            tocContainer         : "",
+            markdown             : "",
+            markdownSourceCode   : false,
+            htmlDecode           : true,  // 解码HTML文本，默认为false，HTML文本不解析
+            autoLoadKaTeX        : true,  // TeX(LaTeX), based on KaTeX
+            pageBreak            : true,
+            atLink               : true,   // for @link
+            emailLink            : true,
+            tex                  : false,
+            flowChart            : false,  // 流程图,flowChart.js only support IE9+,不能正常显示
+            sequenceDiagram      : false,  // 时序图,sequenceDiagram.js only support IE9+，不能正常显示
+            previewCodeHighlight : true,  // 语法高亮显示
+        });
+    </script>
+
+    <script>
+        // 去除ckeditor的样式，这样设置宽度适应div
+        $(function(){
+            $(".django-ckeditor-widget").removeAttr('style');
+          }
+        );
+
+        {#function confirm_submit(article_id){#}
+        {#    // 从 ckeditor 中取值#}
+        {#    let content = CKEDITOR.instances['id_comment'].getData();#}
+        {#    // 发送ajax post请求#}
+        {#    if (content.length !== 0) {#}
+        {#        $.ajax({#}
+        {#            url: '/articles/post-comment/' + article_id + '/',#}
+        {#            type: 'POST',#}
+        {#            data: {'comment': content},#}
+        {#            // 成功回调#}
+        {#            success: function(e){#}
+        {#                if(e.code === '200 OK'){#}
+        {#                    console;#}
+        {#                }#}
+        {#            }#}
+        {#        })#}
+        {#    }else {#}
+        {#      alert('内容为空');#}
+        {#    }#}
+
+
+    </script>
+
+    <script>
+      // 加载 modal
+        function load_modal(article_id, comment_id) {
+            let modal_body = '#modal_body_' + comment_id;
+            let modal_id = '#comment_' + comment_id;
+
+            // 加载ckeditor编辑器
+            if ($(modal_body).children().length === 0) {
+                let content = '<iframe src="/articles/post-comment/' +
+                    article_id +
+                    '/' +
+                    comment_id + '/' +
+                    '"' +
+                    ' frameborder="0" style="width: 100%; height: 100%;" id="iframe_' +
+                    comment_id +
+                    '"></iframe>';
+                $(modal_body).append(content);
+            }
+
+            $(modal_id).modal('show');
+        }
+    </script>
+
+    <script src="{% static 'ckeditor/ckeditor/plugins/prism/lib/prism/prism.js' %}"></script>
+    <script src="{% static 'js/sticky-sidebar.js' %}"></script>
+    <script type="text/javascript">
+        function check() {
+            var content = CKEDITOR.instances['id_comment'].getData();
+                if (content == null || content.length === 0){
+                    alert('内容不能为空！');
+                    return false;
+                }
+                return true;
+        }
+
+    </script>
+    <script>
+    $('.markdown-body').css({'font-size':'16px'});
+    </script>
+
+    <script>
+    // 当不传入顶部背景图时，设置导航栏背景为黑色
+        var topbkg = document.getElementsByClassName('top-bkg')[0].id;
+
+        if(topbkg === ""){
+                $('.navbar').addClass('nav-bkg-dark')
+            } else {
+                $('.top-bkg div span').removeClass('title-dark').addClass('title-white');
+                $('.top-bkg div p').removeClass('title-msg-grey').addClass('title-msg-white');
+                $('.top-bkg div p a').removeClass('link-grey').addClass('link-white');
+            }
+    </script>
+{% endblock %}

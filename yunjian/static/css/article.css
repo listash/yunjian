@@ -1,0 +1,42 @@
+.media-body p {
+  margin-bottom: 5px;
+}
+
+.sidebar{
+    will-change: min-height;
+}
+
+.sidebar__inner{
+    transform: translate(0, 0); /* For browsers don't support translate3d. */
+    transform: translate3d(0, 0, 0);
+    will-change: position, transform;
+}
+
+.clearfix::after {
+    content:"";
+    display:table;
+    clear: both;
+}
+
+.post-copyright {
+    margin: 0;
+    list-style: none;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    padding: 0.5em 1em;
+    background-color: #ececec;
+    border-left: 3px solid #00c4ff;
+    line-height: 2;
+    border-radius: 5px;
+}
+
+.copyright-item {
+    line-height: 1.5;
+    margin: 0.5em 0;
+}
+
+.col-centered {
+    float: none;
+    margin-right: auto;
+    margin-left: auto;
+}

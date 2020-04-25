@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>导航栏设置透明磨砂效果</title>
+<style type="text/css">
+* { margin: 0; padding: 0; }
+.nav { position: relative; top: 0; left: 0; width: 100%; height: 200px; color: #FFFFFF; }
+.nav div { position: absolute; top: -10px; left: -10px; width: 100%; height: 100%; padding: 10px; }
+.blur { background-image: url('https://ftp.bmp.ovh/imgs/2020/03/b8da1fceae6ae4fa.png'); }
+.blur1 {
+/*磨砂样式*/
+-webkit-filter: blur(5px);
+-moz-filter: blur(5px);
+    -ms-filter: blur(5px);
+    -o-filter: blur(5px);
+    filter: blur(5px);
+    filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=5,MakeShadow=false);
+}
+.bg { }
+</style>
+</head>
+<body>
+<div style="width:100%; height:1000px;">
+<div class="nav">
+<div class="blur blur1"></div>
+<div class="bg">磨砂样式</div>
+</div>
+<div class="nav">
+<div class="blur"></div>
+<div class="bg">透明样式</div>
+</div>
+<div class="nav">
+<div class="blur">普通样式</div>
+</div>
+</div>
+</body>
+
+</html>
+

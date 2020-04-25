@@ -1,0 +1,36 @@
+{% load static thumbnail %}
+
+<div class="card questions">
+    <div class="card-body">
+        <div>
+            {% if not question.has_answer %}
+
+                <span class="badge badge-danger">待解决</span>
+            {% else %}
+                <span class="badge badge-success">已解决</span>
+            {% endif %}
+            <h4 class="card-title">
+                <a href="{% url 'qa:question_detail' question.id %}">{{ question.title }}</a>
+            </h4>
+
+            <div class="question-user">
+                {% if not question.has_answer %}
+                    <div class="pull-left">
+                      <a href="{% url 'qa:propose_answer' question.id %}" class="btn btn-sm btn-info" role="button">我要回答</a>
+                    </div>
+                {% endif %}
+
+                <div class="pull-right" style="margin-top: 10px">
+                    <span class="text-secondary">{{ question.count_answers }}个回答&nbsp;&nbsp;</span>
+                    <a href="{% url 'users:detail' question.user.username %}">{{ question.user.get_profile_name }} </a>&nbsp;&nbsp;
+                    <span class="text-secondary"> {{ question.created_at|timesince }}之前提问</span>
+                    {% if question.tags.names %}
+                        {% for tag in question.tags.names %}
+                            <span class="badge badge-primary"> {{ tag }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

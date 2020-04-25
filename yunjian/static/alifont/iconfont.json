@@ -1,0 +1,37 @@
+{
+  "id": "1639481",
+  "name": "alifont",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "974263",
+      "name": "heart",
+      "font_class": "heart1",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "9785670",
+      "name": "heart",
+      "font_class": "heart",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    },
+    {
+      "icon_id": "10562172",
+      "name": "Heart, broken",
+      "font_class": "Heartbroken",
+      "unicode": "e690",
+      "unicode_decimal": 59024
+    },
+    {
+      "icon_id": "11992847",
+      "name": "heart-broken-solid",
+      "font_class": "heart-broken-solid",
+      "unicode": "e6c8",
+      "unicode_decimal": 59080
+    }
+  ]
+}

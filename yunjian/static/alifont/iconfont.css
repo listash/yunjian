@@ -1,0 +1,33 @@
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1581668324498'); /* IE9 */
+  src: url('iconfont.eot?t=1581668324498#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAARoAAsAAAAACNgAAAQZAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDMgqEZIQZATYCJAMUCwwABCAFhG0HWxu4B8gekiSIUAUUSKAAgDY5Hp7Wfn/uzOyi0iCJNuh48iTe8EQjRBJkUvRfslXRUN/856Y/oWKSmjpScfgJHvZJTfw2U4H5aa+3iZ1b/f8/3M906QPMZ9/m0hWAowHPZh3XVmR34njD2OVFPk+g1TB/2EpmPhvoKPRNgbgRUQ1AJ6FSKrJDs1AXnCziEWhqTvf4UwA8eH8ff0Bo6JBUmb5z+yxDAJK/Z+0+ZPXu9ap2UIA9nAHsHBkzgELcFppusILQDJZWeb6GBUCrZkkaalrZ7uzuw71EvA1JWo1/eIQkK0RNF7Uj/EK48D3LQgi+lyEkvs8iZL4/5DwYUYXWt6LGMxBNAD/yWUkIacTLwtnJqWXi0bVToHfGYtHiIJvNVfkuW1kdd905c+NJ7sd9Sg5N+JUdeZI2/ta7eHHcqrQPO6zSe/uW/S7FcsnyEIdTdi9P7bdibX2Hp1JxjcetSFUfTz3BSUiyE971sgWLLe3K2Bx2KY/Ls6KOrXc+UE2mjqidVSpJqujUMUtLSK2ou985/tbdgq3PxvR2Pfc/Tp4451GuD9oO5c84cEH/3TvO5lsLAWm1fPw4plZ/vUGsfGlzCTnY5h5GdY/cfGbQnfdTYeGigwDcfVtJWSFbYDJsIVeMg4pdfzSHG4Q3A/A/vC2oFuvuxuuwzEyRcOzr4vbBsyb+Jjbdv/HrmLCCCzKjrru7FgN6X/LyktNPm4T05NOqL19cVopeNPMKePrWL8f5ysDAzKzxHlB/Ojvb2nr5aa6TDxdDCOfpOuVcCYhOi0yzb37qmKOL7yAEghowDY/gAqzt49Wrin0wPjm9QiMDF2S/HOKeKRY3llLOMsr7Iyjkb9Xk6yBzP61Ig96b6VdSE6BtRu5Xm1yskY/lRIVlh6bpK9fGkY45ltPIB63AA/kTC6MxH8FVAJCfPEVDEfffWGV19nVanXH8f522ZzL2Wdr6DZc0FDl4wWKN2X8Cu2FfUbi6uipSo8WSLJW1AURJHmvF+7f1+jqMZKBxJqHZQARJkyHImo2gC34GKm3moNZsHlpNyzrfpg/CEqUFU4YAhG4nIOn0AVm3Z+iC/wKVQd+h1h0saLUT5je2GQuRXhqCDQwUEI1thIhPy0lTy+j52aWQapI2oDjXI3IhUoq8REhgcDqaBeUQDbFH2UyFMgxJkIiWEZngZVAqpQkFosWQzwQKGUYRGxREFv1QIJ+WAT3LEKgBAxIgNGpDEOGjyZHOaIZe5vdLQZQmUg1QRVOZlgtClESTE0IECm6AzhLJGzVdynylZpRQDAaJ15EQmgwhExogqRGiERTFy8QgPkYgYYeAQqwgNIxsKgqcXiK7gUzWhv6kKlLkKFFFrb6ADYgJ0XSV+tkktRHREig3y4gDYkUBSloqEgAAAAAA') format('woff2'),
+  url('iconfont.woff?t=1581668324498') format('woff'),
+  url('iconfont.ttf?t=1581668324498') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1581668324498#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-heart1:before {
+  content: "\e647";
+}
+
+.icon-heart:before {
+  content: "\e653";
+}
+
+.icon-Heartbroken:before {
+  content: "\e690";
+}
+
+.icon-heart-broken-solid:before {
+  content: "\e6c8";
+}
+

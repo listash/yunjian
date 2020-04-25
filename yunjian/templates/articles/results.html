@@ -1,0 +1,7 @@
+
+{% for column in columns %}
+  <a class="dropdown-item" href="{% url 'articles:column_list' column.title %}">
+        {{ column.title }}
+  </a>
+  <div class="dropdown-divider"></div>
+{% endfor %}
