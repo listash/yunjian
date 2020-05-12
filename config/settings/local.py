@@ -49,7 +49,7 @@ DEBUG_TOOLBAR_CONFIG = {
     "SQL_WARNING_THRESHOLD": 1,  # 数据库延时提示/ms
 }
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
-INTERNAL_IPS = ["127.0.0.1", "122.51.242.38"]
+INTERNAL_IPS = ["127.0.0.1", ]
 
 
 # django-extensions
